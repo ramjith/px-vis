@@ -153,12 +153,12 @@ https://github.com/mbostock/d3/wiki/SVG-Axes
       gridAxis: {
         type: Object,
         notify: true,
-        computed: '_calcGridAxis(dimensions,y,currentDomainY.*)'
+        computed: '_calcGridAxis(y,currentDomainY.*)'
       }
     },
 
     observers: [
-      '_generateGs(dimensions,svg,currentDomainX, margin, x, y)'
+      '_generateGs(svg,currentDomainX, x, y)'
     ],
 
     listeners:{
@@ -169,50 +169,59 @@ https://github.com/mbostock/d3/wiki/SVG-Axes
      * Generates a group elem for each dimension and moves it into the correct x coordinate
      *
      */
-    _generateGs: function(dimensions,svg,currentDomainX){
-      if(this._doesObjHaveValues(this.svg) && this._doesObjHaveValues(this.currentDomainX) 
-          && this._doesObjHaveValues(this.dimensions) 
-          && this._doesObjHaveValues(this.margin)) {
+    _generateGs: function(svg,currentDomainX){
+      this.debounce('_generateGs', function() {
 
-        if(!this.axisGroups) {
-          this.cloneSVGElem(this.svg.node(),'axisSvg');
+        if(this._doesObjHaveValues(this.svg) && this._doesObjHaveValues(this.currentDomainX) 
+            && this._doesObjHaveValues(this.dimensions) 
+            && this._doesObjHaveValues(this.margin)) {
+
+          if(!this.axisGroups) {
+            this.cloneSVGElem(this.svg.node(),'axisSvg');
+          }
 
           // generate axis based on the dimentions and bind the dimension to it for easy access later :D
           var g = this.axisSvg.selectAll(".dimension")
-            .data(dimensions)
-            .enter()
+            .data(this.dimensions);
+          
+          g.exit().remove();
+
+          g.enter()
             .append("g")
             .attr("class", "dimension")
+            .attr("id", function(d) {
+              return d;
+            })
+            .style("cursor","move")
+            .call(this.dragBehavior)
             .attr("transform", function(d) { 
               return "translate(" + this.x(d) + "," + this.margin.top + ")"; 
             }.bind(this))
-            .style("cursor","move")
-            .call(this.dragBehavior);
-
-          // TODO When we support muting an axes, might want to be able to access the above g and change the transform
-          this.set('axisGroups', g);
-        } else {
-
-          //update
-          this.axisGroups
+          .merge(g)
             .attr("transform", function(d) { 
               return "translate(" + this.x(d) + "," + this.margin.top + ")"; 
             }.bind(this));
+
+  console.log('generate Gs: ' + g.nodes().length)
+          // TODO When we support muting an axes, might want to be able to access the above g and change the transform
+          this.set('axisGroups', g);
         }
-      }
+      }.bind(this),5);
     },
     /**
      * Returns an indivdual d3 selected element
      *
      */
     _returnGroup: function(i){
-      return Px.d3.select(this.axisGroups.nodes()[i])
+      console.log("return groups: " + this.dimensions.length)
+      return Px.d3.select(this.axisSvg.select('#'+this.dimensions[i]).node());
     },
     /**
      * returns the appropriate scale for a dimension and sets the domain
      *
      */
     _returnY: function(item){
+            console.log("return y")
       if(this.matchTicks){
         var d = this.y[item].domain(),
             min = Math.floor(d[0]/10)*10,
@@ -246,14 +255,16 @@ https://github.com/mbostock/d3/wiki/SVG-Axes
      *
      */
     _calcGridTicks: function(dim){
-      return this._calcTickVals(dim[0]);
+      this.debounce('_calcGridTicks', function() {
+        return this._calcTickVals(dim[0]);
+      }, 5);
     },
     /**
      * Do the same thing for gridlines axis
      *
      */
-    _calcGridAxis: function(dim){
-      return this._returnY(dim[0]);
+    _calcGridAxis: function(){
+      return this._returnY(this.dimensions[0]);
     },
     _setAxisStyles: function(e){
       if(this.axisGroups){
