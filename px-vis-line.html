@@ -436,6 +436,7 @@ Element which draws lines series onto the chart
      */
     _renderProgressively: function(data, numberOfFrames) {
 
+      console.time('draw lines');
         var batches = [],
             currentIndex = 0,
             j = 0,
@@ -502,6 +503,8 @@ Element which draws lines series onto the chart
         } else {
           //finished drawing, reset drawing request counter
           _this._progressiveRenderingCounter = 0;
+          console.timeEnd('draw lines');
+          console.timeEnd('whole loading');
         }
       };
 
