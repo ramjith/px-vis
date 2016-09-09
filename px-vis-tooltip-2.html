@@ -1,0 +1,115 @@
+<link rel="import" href="../polymer/polymer.html"/>
+<link rel="import" href="../px-colors-design/colors.html" />
+<link rel="import" href="px-vis-behavior-common.html" />
+<link rel="import" href="px-vis-behavior-d3.html" />
+<link rel="import" href="px-vis-register.html" />
+<link rel="import" href="../px-tooltip/px-tooltip.html"/>
+
+
+<!--
+Element providing on-chart tooltip display
+- Consumes tooltipData property
+
+
+##### Usage
+
+    <px-vis-tooltip
+        px-svg-elem=[[pxSvgElem]]
+        width="250"
+        margin="[[margin]]"
+        chart-data="[[chartData]]"
+        tooltip-data="[[tooltipData]]">
+    </px-vis-tooltip>
+
+@element px-vis-tooltip
+@blurb Element providing on-chart hover functionality to get data values near the mouse cursor.
+@homepage index.html
+@demo demo.html
+
+-->
+<dom-module id="px-vis-tooltip">
+  <link rel="import" type="css" href="css/px-vis-tooltip.css"/>
+  <template>
+    <style>
+      #toolTipPositionRect {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100px;
+        height: 100px;
+        border: 1px dashed #cccccc;
+        background: transparent;
+      }
+    </style>
+    <div id="toolTipPositionRect">
+      <h3>x,y: [[tooltipData.mouse]]</h3>
+      <h4>positionOffset top, left: [[positionOffset.top]], [[positionOffset.left]]</h4>
+    </div>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+
+    is: 'px-vis-tooltip',
+
+    behaviors: [
+      PxVisBehavior.sizing,
+      PxVisBehaviorD3.svg,
+      PxVisBehavior.dataset,
+      PxVisBehavior.tooltipData,
+      PxVisBehavior.axisTypes,
+      PxVisBehavior.completeSeriesConfig,
+      commonColors
+    ],
+
+    /**
+     * Properties block, expose attribute values to the DOM via 'reflect'
+     *
+     * @property properties
+     * @type Object
+     */
+    properties: {
+      positionOffset: {
+        type: Object,
+        value: null
+      }
+    }, //properties
+
+    observers: [
+      '_updateTooltip(tooltipData.*)'
+     ],
+
+     ready: function() {
+
+     },
+
+    _updateTooltip: function(){
+      if(this.tooltipData.mouse !== null){
+        this.toggleClass('hidden',false, this.$.tooltip);
+        this._moveTooltip();
+      } else {
+        this.toggleClass('hidden',true, this.$.tooltip);
+      }
+    },
+    _moveTooltip: function() {
+
+      if(this.positionOffset) {
+
+        var x = this.tooltipData.mouse[0] + // position of mouse
+          Number(this.positionOffset.left) + // offset of px-vis-timeseries element
+          100 - // width of box
+          50; // offset of svg
+          
+        var y = this.tooltipData.mouse[1] + // position of mouse
+          Number(this.positionOffset.top) + // offset of px-vis-timeseries element
+          100 - // height of box
+          25; // offset of svg
+
+        this.$.toolTipPositionRect.style.left = x + 'px';
+        this.$.toolTipPositionRect.style.top = y + 'px';
+
+      }
+    }
+  });
+</script>
