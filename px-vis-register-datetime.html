@@ -1,0 +1,47 @@
+<link rel="import" href="../polymer/polymer.html"/>
+
+<dom-module id="px-vis-register-datetime">
+  <link rel="import" type="css" href="css/px-vis-register.css"/>
+  <template>
+    <div id="dateTime">
+      <span id="firstDateTime">[[firstDateTime]]</span>
+      <span>[[separator]]</span>
+      <span id="secondDateTime">[[secondDateTime]]</span>  &nbsp;
+    </div>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'px-vis-register-datetime',
+    properties: {
+      /**
+       * Holder for the formated first datetime string
+       *
+       * @property firstDateTime
+       * @type string
+      */
+      firstDateTime:{
+        type: String
+      },
+      /**
+       * Holder for the formated second datetime string
+       *
+       * @property secondDateTime
+       * @type string
+      */
+      secondDateTime:{
+        type: String
+      },
+      /**
+       * Holder for the formated separator character
+       *
+       * @property separator
+       * @type string
+      */
+      separator:{
+        type: String
+      }
+    }
+  });
+</script>

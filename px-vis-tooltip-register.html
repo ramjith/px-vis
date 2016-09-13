@@ -1,0 +1,42 @@
+<link rel="import" href="../polymer/polymer.html"/>
+<link rel="import" href="../px-colors-design/colors.html" />
+<link rel="import" href="px-vis-register-datetime.html" />
+
+<dom-module id="px-vis-tooltip-register">
+  <link rel="import" type="css" href="css/px-vis-tooltip-register.css"/>
+  <template>
+    <div
+      id="registerWrap"
+      class="inline--flex flex--col"
+      style$="height:{{height}}px; width:[[width]]px">
+      
+      <template is="dom-if" if="{{_isOfType(xAxisType,'time')}}">
+        <px-vis-register-datetime
+          first-date-time="[[_firstDateTime]]"
+          second-date-time="[[_secondDateTime]]"
+          separator="[[_separator]]"
+        ></px-vis-register-datetime>
+      </template>
+
+    </div>
+  </template>
+
+</dom-module>
+<script>
+  Polymer({
+    is: 'px-vis-tooltip-register',
+    properties: {
+      stuff: {
+        type: String,
+        value: 'hello'
+      },
+      height: {
+        type: Number,
+
+      }
+    },
+    ready: function(){
+      this.set('tooltipElem', this.$.tooltip);
+    }
+  });
+</script>

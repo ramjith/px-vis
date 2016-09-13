@@ -2,13 +2,17 @@
 <link rel="import" href="../px-colors-design/colors.html" />
 <link rel="import" href="px-vis-behavior-common.html" />
 <link rel="import" href="px-vis-behavior-datetime.html"/>
+<link rel="import" href="px-vis-register-datetime.html"/>
 <link rel="import" href="../numbro-element/numbro-element.html" />
 <link rel="import" href="../px-tooltip/px-tooltip.html" />
 
 <!--
 Element providing a display and interaction space for series in your chart.
 
-It can be either vertical on the side of the chart or horizonal above or below your chart. It displays a colored bar matching the series color and the series name. When you hover over the chart, the chart sends data to the register via the bound "tooltipData" property. These data values are then displayed in the register.
+It can be either vertical on the side of the chart or horizonal above or below your chart.
+It displays a colored bar matching the series color and the series name.
+When you hover over the chart, the chart sends data to the register via the bound "tooltipData" property.
+These data values are then displayed in the register.
 
 You can turn series on the chart off by clicking on that series in the register.
 
@@ -58,7 +62,8 @@ The component returns an object via mutedSeries which the chart can take and rea
     }
 
 ##### Time, number, and name formatting
-Formatting for the timestamps,the data values, and the series names can be controlled via a series of properties. Please see the properties for configuration details.
+Formatting for the timestamps,the data values, and the series names can be controlled via a series of properties.
+Please see the properties for configuration details.
 
 @element px-vis-register
 @blurb Element providing a display and interaction space for series in your chart.
@@ -74,9 +79,11 @@ Formatting for the timestamps,the data values, and the series names can be contr
         class="inline--flex flex--col"
         style$="height:{{height}}px; width:[[width]]px">
         <template is="dom-if" if="{{_isOfType(xAxisType,'time')}}">
-          <div id="dateTime">
-            <span id="firstDateTime">{{_firstDateTime}}</span> <span>{{_separator}}</span> <span id="secondDateTime">{{_secondDateTime}}</span>  &nbsp;
-          </div>
+          <px-vis-register-datetime
+            first-date-time="[[_firstDateTime]]"
+            second-date-time="[[_secondDateTime]]"
+            separator="[[_separator]]"
+          ></px-vis-register-datetime>
         </template>
         <div class$="{{_getSeriesWrapperClass(type)}}">
           <template is="dom-if" if="{{!_isOfType(xAxisType, 'pie')}}">
