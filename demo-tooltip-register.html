@@ -7,11 +7,39 @@
     <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
     <script src="../webcomponentsjs/webcomponents-lite.min.js"></script>
     <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
-    <link rel="import" href="px-vis-tooltip-register.html"/>
+    <link rel="import" href="px-vis-register.html"/>
   </head>
   <body>
-    <h1>px-vis-tooltip-register demo</h1>
     <br/>
-    <px-vis-tooltip-register></px-vis-tooltip-register>
+    px-vis-register:
+    <br/>
+    <px-vis-register
+      width="300"
+      height="100"
+      type="horizontal"
+      tooltip-data='{
+        "time": "2013-12-01",
+        "series": [
+          {
+            "name": "mySeries",
+            "value": {
+              "x": 1464730597421,
+              "y": 10.0
+            }
+          },
+          {
+            "name": "seriesName1",
+            "value": {"x": 1464730597421,"y": 12.2}
+          },
+          {
+            "name":"seriesName2",
+            "value": {
+              "x":1464730597421,
+              "y": 8.7
+            }
+          }
+        ]
+      }'>
+    </px-vis-register>
   </body>
 </html>

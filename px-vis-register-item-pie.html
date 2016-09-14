@@ -1,0 +1,37 @@
+<link rel="import" href="../polymer/polymer.html"/>
+
+<dom-module id="px-vis-register-item-pie">
+
+  <template is="dom-repeat" items="{{chartData}}">
+    <span class$="{{_mutedToStart(item.name)}}" name$="R{{_returnPieVal(item, 'y', '', usePercentage)}}" on-click="_pieSeriesClicked">
+        <span
+          class="seriesMarker"
+          style$="background-color:{{_getPieBackColor(item, index)}}"
+          name$="R{{_returnPieVal(item, 'y', '', usePercentage)}}"
+        >&nbsp;</span>
+        <div class$="{{_getWrapperClass(type)}}">
+          <div class="seriesName" name$="R{{_getName(item)}}">
+            {{_returnTruncatedName(item)}}&nbsp;
+            <template is="dom-if" if="{{_didTruncate(item,truncationLength)}}">
+              <px-tooltip delay="500">{{_getName(item)}}</px-tooltip>
+            </template>
+          </div>
+          <!-- Display serie data differently depending on x and y axis types -->
+          <div class="seriesData" name$="R{{_returnPieVal(item, 'y', '', usePercentage)}}">
+            <span>[[_returnPieVal(item, 'x', '', usePercentage)]]</span>
+            <template is="dom-if" if="{{_returnPieVal(item, 'x', '', usePercentage)}}">{{_getPieUnit(usePercentage)}}</template>
+          </div>
+        </div>
+    </span>
+  </template>
+
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'px-vis-register-item-pie',
+    properties: {
+
+    }
+  });
+</script>
