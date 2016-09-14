@@ -1,0 +1,11 @@
+@import "px-defaults-design/_settings.defaults.scss";
+
+$series-time-spacing: $inuit-base-spacing-unit * 2 / 3;
+
+#dateTime{
+ margin-bottom: $series-time-spacing;
+}
+
+#secondDateTime{
+  font-weight: bold;
+}

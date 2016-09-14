@@ -57,6 +57,11 @@ module.exports = function(grunt) {
           'css/noprefix/px-vis-tooltip-register.css': 'sass/px-vis-tooltip-register-predix.scss',
         }
       },
+      pxRegisterDatetime: {
+        files: {
+          'css/noprefix/px-vis-register-datetime.css': 'sass/px-vis-register-datetime.scss'
+        }
+      },
       pxTooltip: {
         files: {
           'css/noprefix/px-vis-tooltip-sketch.css': 'sass/px-vis-tooltip-sketch.scss',

@@ -37,7 +37,7 @@ $icon-text-space:       $inuit-base-spacing-unit / 3;
 $series-wide-spacing:   $inuit-base-spacing-unit / 5;
 $series-narrow-spacing: $inuit-base-spacing-unit;
 
-$series-time-spacing:   $inuit-base-spacing-unit * 2 / 3;
+
 
 :host{
   min-height: $inuit-base-spacing-unit * 2;
@@ -46,13 +46,6 @@ $series-time-spacing:   $inuit-base-spacing-unit * 2 / 3;
   display: inline-flex;
 }
 
-#dateTime{
- margin-bottom: $series-time-spacing;
-}
-
-#secondDateTime{
-  font-weight: bold;
-}
 
 .series{
   cursor: pointer;

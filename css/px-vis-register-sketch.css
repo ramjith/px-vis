@@ -601,12 +601,6 @@ a {
   display: -ms-inline-flexbox;
   display: inline-flex; }
 
-#dateTime {
-  margin-bottom: 0.6666666667rem; }
-
-#secondDateTime {
-  font-weight: bold; }
-
 .series {
   cursor: pointer;
   -webkit-user-select: none;
