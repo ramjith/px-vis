@@ -2,7 +2,7 @@
 <link rel="import" href="../px-colors-design/colors.html"/>
 <link rel="import" href="px-vis-behavior-common.html"/>
 <link rel="import" href="px-vis-behavior-datetime.html"/>
-<link rel="import" href="px-vis-register-datetime.html"/>
+<link rel="import" href="px-vis-register-item.html"/>
 <link rel="import" href="../numbro-element/numbro-element.html" />
 <link rel="import" href="../px-tooltip/px-tooltip.html"/>
 
@@ -92,13 +92,12 @@ Please see the properties for configuration details.
       <div class$="{{_getSeriesWrapperClass(type)}}">
         <template is="dom-if" if="{{!_isOfType(xAxisType, 'pie')}}">
           <template is="dom-repeat" items="{{_series}}">
-            item: [[item]]
-            <br/>
-            <!--
             <px-vis-register-item
-              item="[[item]]">
+              item="[[item]]"
+              complete-series-config="[[completeSeriesConfig]]"
+              chart-data="[[chartData]]"
+              type="[[type]]">
             </px-vis-register-item>
-            -->
           </template>
         </template>
         <!-- For pie charts -->
@@ -204,27 +203,18 @@ Please see the properties for configuration details.
       '_formatDateTime(tooltipData.*)',
       '_toggleSeries(mutedSeries.*)'
      ],
-     _getWrapperClass: function(type) {
-       var classList = 'flex ';
 
-       if(type === 'horizontal') {
-         classList += 'flex--col ';
-       } else {
-         classList += 'flex--row flex--justify';
-       }
-
-       return classList;
+     ready: function() {
+       console.log(this.completeSeriesConfig);
      },
 
      _getSeriesWrapperClass: function(type) {
        var classList = 'flex ';
-
        if(type === 'horizontal') {
          classList += 'flex--row ';
        } else {
          classList += 'flex--col';
        }
-
        return classList;
      },
 
@@ -292,10 +282,7 @@ Please see the properties for configuration details.
         this.toggleClass('muted', this.mutedSeries[keys[i]], series);
       }
     },
-
-
     _returnPieVal: function(item, axis, separator, usePercentage) {
-
       //pie should have only one config bit.
       var key = Object.keys(this.completeSeriesConfig)[0],
           axisKey = axis === 'x' ? this.completeSeriesConfig[key]['x'] : this.completeSeriesConfig[key]['y'],
@@ -317,8 +304,8 @@ Please see the properties for configuration details.
     },
     _getPieUnit: function(usePercentage) {
       //pie should have only one config bit.
-      var key = Object.keys(this.completeSeriesConfig)[0],
-          unit = this.completeSeriesConfig[key].xAxisUnit;
+      var key = Object.keys(this.completeSeriesConfig)[0];
+      var unit = this.completeSeriesConfig[key].xAxisUnit;
       return usePercentage ? '%' : unit;
     },
     _getPieBackColor: function(item, index) {

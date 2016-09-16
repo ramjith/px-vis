@@ -3,24 +3,24 @@
 <link rel="import" href="px-vis-behavior-common.html"/>
 
 <dom-module id="px-vis-register-item">
-  <link rel="import" type="css" href="css/px-vis-register-item.css"/>
+  <link rel="import" type="css" href="css/px-vis-register.css"/>
   <template>
     <span
-        class$="{{_mutedToStart(item.name)}}"
-        name$="R{{item.name}}"
-        on-click="_seriesClicked">
-        <span
-          class="seriesMarker"
-          style$="background-color:{{_returnItemColor(item.name)}};"
-          name$="R{{item.name}}">&nbsp;</span>
-        <span
-          class$="{{_getWrapperClass(type)}}">
+      class$="[[_itemMutedToStart]]"
+      name$="R{{item.name}}"
+      on-click="_seriesClicked">
+      <span
+        class="seriesMarker"
+        style$="background-color:[[_itemColor]]"
+        name$="R{{item.name}}">&nbsp;</span>
+      <span
+        class$="[[_wrapperClass]]">
         <div
           class="seriesName"
           name$="R{{item.name}}">
-          {{_returnTruncatedName(item.name)}}&nbsp;
-          <template is="dom-if" if="{{_didTruncate(item.name,truncationLength)}}">
-            <px-tooltip delay="500">{{_getName(item.name)}}</px-tooltip>
+          {{_truncatedName}}&nbsp;
+          <template is="dom-if" if="[[_didTruncate]]">
+            <px-tooltip delay="500">[[_configName]]</px-tooltip>
           </template>
         </div>
         <!-- Display serie data differently depending on x and y axis types -->
@@ -28,46 +28,51 @@
           <!-- if x axis is number format and show it -->
           <template is="dom-if" if="{{_isOfType(xAxisType, 'linear')}}">
             <numbro-element
-              value="[[_returnVal(item, 'x', '&nbsp;/&nbsp')]]"
+              value="[[_itemX]]"
               format="[[numberFormat]]"
               culture="[[numberFormatCulture]]"
               currency$="[[numberFormatIsCurrency]]"
               default-currency-format="[[numberFormatCurrency]]"
               zero-format="[[numberFormatZero]]">
             </numbro-element>
-            <template is="dom-if" if="{{_returnVal(item, 'x')}}">{{_getXUnit(item, completeSeriesConfig.*)}}</template>
-            <template is="dom-if" if="[[_returnVal(item, 'x')]]">
+            <template is="dom-if" if="[[_itemX]]">
+              {{_getXUnit(item, completeSeriesConfig.*)}}
+            </template>
+            <template is="dom-if" if="[[_itemX]]">
               &nbsp;/&nbsp
             </template>
           </template>
           <!-- if x axis is ordinal just display it -->
           <template is="dom-if" if="{{_isOfType(xAxisType, 'ordinal')}}">
-            <span>[[_returnVal(item, 'x')]]</span>
-              <template is="dom-if" if="{{_returnVal(item, 'x')}}">{{_getXUnit(item, completeSeriesConfig.*)}}</template>
-              <template is="dom-if" if="[[_returnVal(item, 'x')]]">
-                &nbsp;/&nbsp
-              </template>
+            <span>[[_itemX]]</span>
+            <template is="dom-if" if="[[_itemX]]">
+              {{_getXUnit(item, completeSeriesConfig.*)}}
             </template>
-            <!-- if x axis is time don't display it -->
-
-            <!-- if y axis is number format and show it -->
-              <template is="dom-if" if="{{_isOfType(yAxisType, 'linear')}}">
-                <numbro-element
-                  value="[[_returnVal(item, 'y')]]"
-                  format="[[numberFormat]]"
-                  culture="[[numberFormatCulture]]"
-                  currency$="[[numberFormatIsCurrency]]"
-                  default-currency-format="[[numberFormatCurrency]]"
-                  zero-format="[[numberFormatZero]]">
-                </numbro-element>
-              </template>
-              <!-- if y axis is ordinal just display it -->
-              <template is="dom-if" if="{{_isOfType(yAxisType, 'ordinal')}}">
-                <span>[[_returnVal(item, 'y')]]</span>
-              </template>
-              <template is="dom-if" if="{{_returnVal(item, 'y')}}">{{_getYUnit(item, completeSeriesConfig.*)}}</template>
-            </div>
-          </span>
+            <template is="dom-if" if="[[_itemX]]">
+              &nbsp;/&nbsp
+            </template>
+          </template>
+          <!-- if x axis is time don't display it -->
+          <!-- if y axis is number format and show it -->
+            <template is="dom-if" if="{{_isOfType(yAxisType, 'linear')}}">
+              <numbro-element
+                value="[[_itemY]]"
+                format="[[numberFormat]]"
+                culture="[[numberFormatCulture]]"
+                currency$="[[numberFormatIsCurrency]]"
+                default-currency-format="[[numberFormatCurrency]]"
+                zero-format="[[numberFormatZero]]">
+              </numbro-element>
+            </template>
+            <!-- if y axis is ordinal just display it -->
+            <template is="dom-if" if="{{_isOfType(yAxisType, 'ordinal')}}">
+              <span>[[_itemY]]</span>
+            </template>
+            <template is="dom-if" if="[[_itemY]]">
+              {{_getYUnit(item, completeSeriesConfig.*)}}
+            </template>
+          </div>
+        </span>
       </span>
   </template>
 </dom-module>
@@ -77,12 +82,76 @@
     is: 'px-vis-register-item',
     behaviors: [
       PxVisBehavior.formatting,
+      PxVisBehavior.completeSeriesConfig,
+      PxVisBehavior.truncating,
+      PxVisBehavior.mutedSeries,
       commonColors
     ],
     properties: {
       item: {
         type: Object
-      }
+      },
+      _itemColor: {
+        type: String,
+        computed: '_computeItemColor(item, completeSeriesConfig)'
+      },
+      _itemX: {
+        type: String,
+        computed: '_computeItemX(item, completeSeriesConfig)'
+      },
+      _itemY: {
+        type: String,
+        computed: '_computeItemY(item, completeSeriesConfig)'
+      },
+      _itemMutedToStart: {
+        type: String,
+        computed: '_computeItemMutedToStart(item, completeSeriesConfig)'
+      },
+      _truncatedName: {
+        type: String,
+        computed: '_computeTruncatedName(item, completeSeriesConfig)'
+      },
+      _didTruncate: {
+        type: Boolean,
+        computed: '_computeDidTruncate(item, completeSeriesConfig)'
+      },
+      _configName: {
+        type: String,
+        computed: '_computeConfigName(item, completeSeriesConfig)'
+      },
+      _wrapperClass: {
+        type: String,
+        computed: '_getWrapperClass(item, completeSeriesConfig)'
+      },
+      /**
+       * Defines if the register should be horizontal or vertical. Options are:
+       *  - `vertical`
+       *  - `horizontal`
+       *
+       * @property type
+       * @type string
+       * @default vertical
+      */
+      type: {
+       type: String,
+       value: "vertical",
+       notify: true
+      },
+    },
+    _computeItemY: function() {
+      return this._returnVal(this.item, 'y', '&nbsp;/&nbsp');
+    },
+    _computeItemX: function() {
+      return this._returnVal(this.item, 'x', '&nbsp;/&nbsp');
+    },
+    _computeItemMutedToStart: function() {
+      return this._mutedToStart(this.item.name);
+    },
+    _computeConfigName: function() {
+      return this._getConfigName(this.item.name);
+    },
+    _computeTruncatedName: function() {
+      return this._truncateName(this._getConfigName(this.item.name), this.truncationLength);
     },
 
 
@@ -93,9 +162,9 @@
      *
      * @method _mutedToStart
      */
-    _mutedToStart: function(name) {
+    _mutedToStart: function() {
       var baseClasses = (this.type === 'horizontal') ? "series narrow flex flex--row" : "series wide flex flex--row";
-      if(this.mutedSeries[name]) {
+      if(this.mutedSeries[this.name]) {
         return baseClasses + ' muted';
       }
       return baseClasses;
@@ -138,22 +207,21 @@
      * @param {i}
      * @return {rgb}
      */
-    _returnItemColor:function(name) {
-      return this.completeSeriesConfig[name]['color'];
+    _computeItemColor: function() {
+      return this.completeSeriesConfig[this.item.name]['color'];
     },
 
-
     _returnVal: function(item, axis, separator) {
-      var key = axis === 'x' ?
-        this.completeSeriesConfig[item.name]['x'] : this.completeSeriesConfig[item.name]['y'];
+      var key;
+      if(axis === 'x') {
+        key = this.completeSeriesConfig[item.name]['x'];
+      } else {
+        key = this.completeSeriesConfig[item.name]['y'];
+      }
       if(item.value && item.value[key]) {
         return item.value[key] + (separator ? separator : '');
       }
       return null;
-    },
-
-    _returnTruncatedName: function(name) {
-      return this._truncateName(this._getName(name),this.truncationLength);
     },
 
     /**
@@ -163,22 +231,19 @@
      * @param {str} the original string.
      * @param {len} the truncation length.
      */
-    _didTruncate: function(str,len) {
-      var name = this._getName(str)
-      if(len > 2 && name.length > len) {
-        return true;
-      }
-      return false;
+    _computeDidTruncate: function(str,len) {
+      var name = this._getConfigName(this.item.name)
+      var len = this.truncationLength;
+      return len > 2 && name.length > len ? true : false;
     },
 
-
-    _getName: function(name) {
+    _getConfigName: function(name) {
       if(this.xAxisType === 'pie') {
         //pie should have only one config bit.
         var key = Object.keys(this.completeSeriesConfig)[0];
         return name[this.completeSeriesConfig[key].y];
       } else {
-        return this.completeSeriesConfig[name]['name'];
+        return this.completeSeriesConfig[this.item.name]['name'];
       }
     },
 
@@ -189,5 +254,16 @@
     _getYUnit: function(item, completeSeriesConfig) {
       return this.completeSeriesConfig[item.name] && this.completeSeriesConfig[item.name].yAxisUnit ? this.completeSeriesConfig[item.name].yAxisUnit : '';
     },
+
+    _getWrapperClass: function() {
+      var classList = 'flex ';
+      if(this.type === 'horizontal') {
+        classList += 'flex--col ';
+      } else {
+        classList += 'flex--row flex--justify';
+      }
+      return classList;
+    },
+
   });
 </script>
