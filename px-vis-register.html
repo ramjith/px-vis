@@ -3,6 +3,7 @@
 <link rel="import" href="px-vis-behavior-common.html"/>
 <link rel="import" href="px-vis-behavior-datetime.html"/>
 <link rel="import" href="px-vis-register-item.html"/>
+<link rel="import" href="px-vis-register-datetime.html"/>
 <link rel="import" href="../numbro-element/numbro-element.html" />
 <link rel="import" href="../px-tooltip/px-tooltip.html"/>
 
@@ -86,6 +87,7 @@ Please see the properties for configuration details.
           first-date-time="[[_firstDateTime]]"
           second-date-time="[[_secondDateTime]]"
           separator="[[_separator]]"
+          x-axis-type="[[xAxisType]]"
         ></px-vis-register-datetime>
       </template>
 
@@ -96,7 +98,9 @@ Please see the properties for configuration details.
               item="[[item]]"
               complete-series-config="[[completeSeriesConfig]]"
               chart-data="[[chartData]]"
-              type="[[type]]">
+              type="[[type]]"
+              x-axis-type="[[xAxisType]]"
+              y-axis-type="[[yAxisType]]">
             </px-vis-register-item>
           </template>
         </template>
@@ -294,6 +298,8 @@ Please see the properties for configuration details.
       return null;
     },
     _isOfType: function(toTest, type) {
+      console.log(toTest)
+      console.log(type)
       return toTest === type;
     },
     _getXUnit: function(item, completeSeriesConfig) {

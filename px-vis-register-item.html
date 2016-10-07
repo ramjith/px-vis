@@ -27,6 +27,7 @@
         <div class="seriesData" name$="R{{item.name}}">
           <!-- if x axis is number format and show it -->
           <template is="dom-if" if="{{_isOfType(xAxisType, 'linear')}}">
+            x linear
             <numbro-element
               value="[[_itemX]]"
               format="[[numberFormat]]"
@@ -36,7 +37,7 @@
               zero-format="[[numberFormatZero]]">
             </numbro-element>
             <template is="dom-if" if="[[_itemX]]">
-              {{_getXUnit(item, completeSeriesConfig.*)}}
+              <!-- {{_getXUnit(item, completeSeriesConfig.*)}} -->
             </template>
             <template is="dom-if" if="[[_itemX]]">
               &nbsp;/&nbsp
@@ -44,9 +45,10 @@
           </template>
           <!-- if x axis is ordinal just display it -->
           <template is="dom-if" if="{{_isOfType(xAxisType, 'ordinal')}}">
+            x ordinal
             <span>[[_itemX]]</span>
             <template is="dom-if" if="[[_itemX]]">
-              {{_getXUnit(item, completeSeriesConfig.*)}}
+              <!-- {{_getXUnit(item, completeSeriesConfig.*)}} -->
             </template>
             <template is="dom-if" if="[[_itemX]]">
               &nbsp;/&nbsp
@@ -85,6 +87,7 @@
       PxVisBehavior.completeSeriesConfig,
       PxVisBehavior.truncating,
       PxVisBehavior.mutedSeries,
+      PxVisBehavior.axisTypes,
       commonColors
     ],
     properties: {
