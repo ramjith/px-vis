@@ -40,7 +40,6 @@
           chart-data="[[chartData]]"
           x="[[x]]"
           y="[[y]]"
-          muted-series="[[mutedSeries]]"
           domain-changed="[[domainChanged]]">
         </px-vis-line>
 
@@ -134,12 +133,6 @@
               "y": 'y',
               'color': "rgb(93,165,218)"
             }
-          }
-        },
-        mutedSeries: {
-          type: Object,
-          value : {
-            "mySeries": false
           }
         },
         //chartExtents
